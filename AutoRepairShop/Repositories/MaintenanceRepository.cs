@@ -1,5 +1,4 @@
 ﻿using AutoRepairShop.Api.Repositories.Interfaces;
-using AutoRepairShop.Api.Repositories.Interfaces.Base;
 using AutoRepairShop.Domain.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 

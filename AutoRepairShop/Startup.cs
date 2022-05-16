@@ -1,24 +1,17 @@
-﻿using AutoRepairShop.Api.Services;
+﻿using AutoRepairShop.Api.Repositories;
+using AutoRepairShop.Api.Repositories.Interfaces;
+using AutoRepairShop.Api.Services;
 using AutoRepairShop.Api.Services.Interfaces;
 using AutoRepairShop.Api.Settings;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Serilog;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Reflection;
 
 namespace AutoRepairShop.Api
 {
     public class Startup
     {
-        private readonly IWebHostEnvironment _env;
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -28,22 +21,19 @@ namespace AutoRepairShop.Api
         {
 
             // Get secret key token
-            //Authentication.Auth.key = Configuration.GetSection("Jwt")["Key"];
 
-            // Db Connection
-            services.AddDbContext<DataContext.DataContext>(options => options.UseSqlServer(Configuration.GetSection("Sql")["ConnectionString"]));
-
-            services.AddScoped<HttpClient>();
+            services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
+            services.AddScoped<IRepairShopRepository, RepairShopRepository>();
+            services.AddScoped<IRepairShopConfigurationRepository, RepairShopConfigurationRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             //Services
             services.AddScoped<IMaintenanceService, MaintenanceService>();
             services.AddScoped<IRepairShopService, RepairShopService>();
+            services.AddScoped<IRepairShopConfigurationService, RepairShopConfigurationService>();
             services.AddScoped<IUserService, UserService>();
 
-            //Repositories
-            //services.AddScoped<IProductDapperRepository, ProductDapperRepository>();
-
-            services.AddScoped(provider =>
+            services.AddSingleton(provider =>
             {
                 return new SqlSettings()
                 {
@@ -51,26 +41,14 @@ namespace AutoRepairShop.Api
                 };
             });
 
-            var loggerConfiguration = new LoggerConfiguration();
 
-            Log.Logger = loggerConfiguration.CreateLogger();
+            services.AddSignalR();
+            services.AddMvc();
 
-            services.AddSingleton(Log.Logger);
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
 
-            CorsPolicyBuilder corsPolicyBuilder = new CorsPolicyBuilder().AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials();
-
-            var enableCors = Environment.GetEnvironmentVariable("EnableCors");
-
-            if ((enableCors != null && bool.Parse(enableCors)) || _env.EnvironmentName.ToLower() == "local")
-            {
-                corsPolicyBuilder = corsPolicyBuilder.SetIsOriginAllowed(origin => true);
-            }
-
-            services.AddCors(options => options.AddPolicy("CorsPolicy", corsPolicyBuilder.Build()));
-
-            services.AddRouting(options => options.LowercaseUrls = true);
+            services.AddControllers();
 
             // If using Kestrel:
             services.Configure<KestrelServerOptions>(options =>
@@ -83,31 +61,30 @@ namespace AutoRepairShop.Api
             {
                 options.AllowSynchronousIO = true;
             });
-
-            services.AddSwaggerGen();
         }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            if (_env.EnvironmentName == "Development")
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            var builder = WebApplication.CreateBuilder();
-
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            //if (app.Environment.IsDevelopment())
+            /// {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            //}
 
             app.UseHttpsRedirection();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
+            //appBuilder.MapControllers();
+
+            //app.Run();
 
             app.UseRouting();
-            app.UseCors("CorsPolicy");
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
-
 }

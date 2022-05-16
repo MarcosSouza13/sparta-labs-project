@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRepairShop.Api", "AutoRepairShop\AutoRepairShop.Api.csproj", "{AFDEE63F-0246-4510-9195-2D95DC120174}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRepairShop.Api", "AutoRepairShop\AutoRepairShop.Api.csproj", "{AFDEE63F-0246-4510-9195-2D95DC120174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRepairShop.Domain", "AutoRepairShop.Domain\AutoRepairShop.Domain.csproj", "{9F1335C5-AAE4-47D3-A8AB-89FAAB80F9BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRepairShop.Domain", "AutoRepairShop.Domain\AutoRepairShop.Domain.csproj", "{9F1335C5-AAE4-47D3-A8AB-89FAAB80F9BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRepairShop.Arguments", "AutoRepairShop.Arguments\AutoRepairShop.Arguments.csproj", "{5E412603-6B7F-4881-93EC-517251D3B293}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoRepairShop.Arguments", "AutoRepairShop.Arguments\AutoRepairShop.Arguments.csproj", "{5E412603-6B7F-4881-93EC-517251D3B293}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

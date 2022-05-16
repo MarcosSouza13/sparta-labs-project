@@ -1,4 +1,6 @@
 ﻿using AutoRepairShop.Api.Services.Interfaces;
+using AutoRepairShop.Arguments.RepairShop;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoRepairShop.Api.Controllers
@@ -14,52 +16,11 @@ namespace AutoRepairShop.Api.Controllers
             _repairShopService = repairShopService;
         }
 
-        [HttpGet]
-        public ActionResult Get(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [Authorize]
+        public async Task<IActionResult> Add([FromBody] AddRepairShopRequest request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return await _repairShopService.Add(request.ToRepairShop());
         }
-
-        [HttpPut]
-        [ValidateAntiForgeryToken]
-        public ActionResult Put(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
     }
 }

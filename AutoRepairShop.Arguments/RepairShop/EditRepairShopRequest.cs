@@ -12,7 +12,6 @@ namespace AutoRepairShop.Arguments.RepairShop
             Name = repairShop.Name;
             Cnpj = repairShop.Cnpj;
             CreatedAt = repairShop.CreatedAt;
-            UpdatedAt = repairShop.UpdatedAt;
         }
 
         public Domain.Entities.Models.RepairShop ToRepairShop()
@@ -23,15 +22,13 @@ namespace AutoRepairShop.Arguments.RepairShop
                 Name = Name,
                 Cnpj = Cnpj,
                 CreatedAt = CreatedAt,
-                UpdatedAt = UpdatedAt
             };
         }
 
         public long Id { get; set; }
         public string? Name { get; set; }
-        public int Cnpj { get; set; }
+        public string Cnpj { get; set; }
         public string? Password { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
     }
 }

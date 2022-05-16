@@ -9,18 +9,30 @@ namespace AutoRepairShop.Api.Services
 {
     public class MaintenanceService : IMaintenanceService
     {
-        private readonly DataContext.DataContext _dataContext;
         private readonly IMaintenanceRepository _maintenanceRepository;
+        private readonly IRepairShopConfigurationRepository _repairShopConfigurationRepository;
+        private readonly IServiceRepository _serviceRepository;
 
-        public MaintenanceService(IMaintenanceRepository maintenanceRepository)
+        public MaintenanceService(IMaintenanceRepository maintenanceRepository, IRepairShopConfigurationRepository repairShopConfigurationRepository, IServiceRepository serviceRepository)
         {
             _maintenanceRepository = maintenanceRepository;
+            _repairShopConfigurationRepository = repairShopConfigurationRepository;
+            _serviceRepository = serviceRepository;
         }
 
         public async Task<ResponseHttp<IResponse>> Add(Maintenance maintenance)
         {
             if (maintenance.ScheduledAt.DayOfWeek == DayOfWeek.Saturday || maintenance.ScheduledAt.DayOfWeek == DayOfWeek.Sunday)
                 return new ResponseHttp<IResponse>(412, errorMessage: "Não é possível agendar o serviço no fim de semana");
+
+            var workload = await _repairShopConfigurationRepository.GetByIdRepairShop(maintenance.IdRepairShop, maintenance.ScheduledAt);
+            if (workload == null)
+                return new ResponseHttp<IResponse>(412, errorMessage: $"Não possui carga de trabalho disponível para a empresa: {maintenance.IdRepairShop}, no dia: {maintenance.ScheduledAt.Date}");
+
+            var unitOfWork = await _serviceRepository.Get((int)maintenance.Type);
+
+            if (workload.WorkBalance > unitOfWork)
+                return new ResponseHttp<IResponse>(412, errorMessage: "Não é possível realizar o agendamento do serviço, pois ultrapassou a carga de trabalho máxima diária");
 
             await _maintenanceRepository.Add(maintenance);
 
@@ -50,7 +62,7 @@ namespace AutoRepairShop.Api.Services
 
         public async Task<ResponseHttp<IResponse>> Delete(long id)
         {
-            var maintenance = await GetById(id);  
+            var maintenance = await GetById(id);
 
             if (maintenance == null)
                 return new ResponseHttp<IResponse>(412, errorMessage: $"Não é possível deletar o agendamento do serviço com o Id: {id}");
@@ -69,7 +81,7 @@ namespace AutoRepairShop.Api.Services
             {
                 list.Add(new ViewMaintenanceResponse(item));
             }
-            
+
             return new ResponseHttp<IEnumerable<IResponse>>(200, list);
         }
 

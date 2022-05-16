@@ -6,10 +6,11 @@ namespace AutoRepairShop.Domain.Entities.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
-        public int Cnpj { get; set; }
+        public string Cnpj { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public virtual ICollection<Maintenance> Maintenances { get; set; }
 
+        public virtual ICollection<Maintenance> Maintenances { get; set; }
+        public virtual ICollection<RepairShopConfiguration> Configurations { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

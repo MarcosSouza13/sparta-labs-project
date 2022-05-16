@@ -1,71 +1,33 @@
-﻿using Jose;
+﻿using AutoRepairShop.Api.Settings;
+using Jose;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace AutoRepairShop.Api.Authentication
 {
     public static class Auth
     {
-        public static string key;
+        public static string key = "9A4ACF46281667CA7A5967A5A6EE2906F0CDFBB80D29C38A19BE7CE02023C81D";
         private static byte[] KeyBytes => Encoding.UTF8.GetBytes(key);
         private const JwsAlgorithm algorithm = JwsAlgorithm.HS256;
-
-        /// <summary>
-        /// Criar token e guardar nele um objeto do tipo payload
-        /// </summary>
-        /// <param name="payload">Payload do token</param>
-        /// <returns>Token</returns>
-        public static string EncodeToken(Payload payload)
+        
+        public static string EncodeToken()
         {
-                payload.ExpirationDate = DateTime.Now.AddHours(8);
-            return JWT.Encode(payload, KeyBytes, algorithm);
-        }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor()
+            {
+                Expires = DateTime.Now.AddHours(8),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(KeyBytes), SecurityAlgorithms.HmacSha256Signature),
+            };
 
-        public static string EncodeBaseToken(BasePayload basePayload)
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(securityToken);
+        }
+        public static string EncodeBaseToken(string password)
         {
-            return JWT.Encode(basePayload, KeyBytes, algorithm);
+            return JWT.Encode(password, KeyBytes, algorithm);
         }
-
-        /// <summary>
-        /// Decode token
-        /// </summary>
-        /// <param name="token">Token</param>
-        /// <returns>Payload do token</returns>
-        public static Payload DecodeToken(string token)
-        {
-            try
-            {
-                token = token.Replace("Bearer ", "");
-                return JsonConvert.DeserializeObject<Payload>(JWT.Decode(token, KeyBytes, algorithm));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public static BasePayload DecodeBaseToken(string token)
-        {
-            try
-            {
-                token = token.Replace("Bearer ", "");
-                return JsonConvert.DeserializeObject<BasePayload>(JWT.Decode(token, KeyBytes, algorithm));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// retorna o usuario logado na sessao
-        /// </summary>
-        /// <param name="request">request atributo da controller</param>
-        /// <returns></returns>
-        public static Payload UserLogedIn(HttpRequest request)
-            => DecodeToken(request.Headers["Authorization"]);
-
-        public static BasePayload UserBaseLogedIn(HttpRequest request)
-            => DecodeBaseToken(request.Headers["Authorization"]);
     }
 }
