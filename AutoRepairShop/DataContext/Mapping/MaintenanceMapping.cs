@@ -25,15 +25,15 @@ namespace AutoRepairShop.Api.DataContext.Mapping
                 .HasMaxLength(128)
                 .IsUnicode(false);
 
-            builder.Property(e => e.ScheduledAt)
+            builder.Property(a => a.ScheduledAt)
                 .HasColumnType("datetime");
 
-            builder.Property(e => e.UpdatedAt)
+            builder.Property(a => a.UpdatedAt)
                 .HasColumnType("datetime");
 
-            builder.HasOne(b => b.RepairShop)
-            .WithMany(c => c.Maintenances)
-            .HasForeignKey(b => b.IdRepairShop)
+            builder.HasOne(a => a.RepairShop)
+            .WithMany(b => b.Maintenances)
+            .HasForeignKey(a => a.IdRepairShop)
             .OnDelete(DeleteBehavior.Restrict)
             .HasConstraintName("FK_Maintenance_RepairShop");
         }

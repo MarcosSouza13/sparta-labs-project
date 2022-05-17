@@ -25,7 +25,7 @@ namespace AutoRepairShop.Api.DataContext
 {
     public class DataContext : DbContext
     {
-        public DataContext () { }
+        public DataContext() { }
 
         public DataContext(DbContextOptions<DataContext> dbContext) : base(dbContext)
         {
@@ -35,12 +35,14 @@ namespace AutoRepairShop.Api.DataContext
         public virtual DbSet<Maintenance> Maintenance { get; set; }
         public virtual DbSet<RepairShop> RepairShop { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<RepairShopConfiguration> RepairShopConfiguration { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.AddConfiguration(new MaintenanceMapping());
             modelBuilder.AddConfiguration(new RepairShopMapping());
             modelBuilder.AddConfiguration(new UserMapping());
+            modelBuilder.AddConfiguration(new RepairShopConfigurationMapping());
 
             base.OnModelCreating(modelBuilder);
         }

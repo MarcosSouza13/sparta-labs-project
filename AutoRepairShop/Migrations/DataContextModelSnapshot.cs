@@ -72,10 +72,11 @@ namespace AutoRepairShop.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<int>("Cnpj")
+                    b.Property<string>("Cnpj")
+                        .IsRequired()
                         .HasMaxLength(14)
                         .IsUnicode(false)
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(14)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime");
@@ -86,12 +87,36 @@ namespace AutoRepairShop.Api.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(128)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime");
-
                     b.HasKey("Id");
 
                     b.ToTable("RepairShop");
+                });
+
+            modelBuilder.Entity("AutoRepairShop.Domain.Entities.Models.RepairShopConfiguration", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .IsUnicode(false)
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime");
+
+                    b.Property<long>("IdRepairShop")
+                        .IsUnicode(false)
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("WorkBalance")
+                        .IsUnicode(false)
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdRepairShop");
+
+                    b.ToTable("RepairShopConfiguration");
                 });
 
             modelBuilder.Entity("AutoRepairShop.Domain.Entities.Models.User", b =>
@@ -109,6 +134,9 @@ namespace AutoRepairShop.Api.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(14)");
 
+                    b.Property<long>("IdRepairShop")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -117,11 +145,19 @@ namespace AutoRepairShop.Api.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(36)
+                        .HasMaxLength(250)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(36)");
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(250)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdRepairShop");
 
                     b.ToTable("User");
                 });
@@ -138,9 +174,37 @@ namespace AutoRepairShop.Api.Migrations
                     b.Navigation("RepairShop");
                 });
 
+            modelBuilder.Entity("AutoRepairShop.Domain.Entities.Models.RepairShopConfiguration", b =>
+                {
+                    b.HasOne("AutoRepairShop.Domain.Entities.Models.RepairShop", "RepairShop")
+                        .WithMany("Configurations")
+                        .HasForeignKey("IdRepairShop")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_RepairShopConfiguration_RepairShop");
+
+                    b.Navigation("RepairShop");
+                });
+
+            modelBuilder.Entity("AutoRepairShop.Domain.Entities.Models.User", b =>
+                {
+                    b.HasOne("AutoRepairShop.Domain.Entities.Models.RepairShop", "RepairShop")
+                        .WithMany("Users")
+                        .HasForeignKey("IdRepairShop")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_User_RepairShop");
+
+                    b.Navigation("RepairShop");
+                });
+
             modelBuilder.Entity("AutoRepairShop.Domain.Entities.Models.RepairShop", b =>
                 {
+                    b.Navigation("Configurations");
+
                     b.Navigation("Maintenances");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

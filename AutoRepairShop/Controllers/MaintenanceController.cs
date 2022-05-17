@@ -1,5 +1,6 @@
 ﻿using AutoRepairShop.Api.Services.Interfaces;
 using AutoRepairShop.Arguments.Maintenance;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoRepairShop.Api.Controllers
@@ -15,42 +16,32 @@ namespace AutoRepairShop.Api.Controllers
             _maintenanceService = maintenanceService;
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> List()
-        {
-            return await _maintenanceService.List();
-        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> List() => await _maintenanceService.List();
+
+        [HttpGet("today")]
+        [Authorize]
+        public async Task<IActionResult> ListDaily() => await _maintenanceService.ListDaily();
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(long id)
-        {
-            return await _maintenanceService.Get(id);
-        }
+        [Authorize]
+        public async Task<IActionResult> Get(long id) => await _maintenanceService.Get(id);
 
-        [HttpGet("all/dates")]
-        public async Task<IActionResult> ListWithDates([FromQuery] string initalDate, string finalDate)
-        {
-            return await _maintenanceService.ListWithDates(initalDate, finalDate);
-        }
+        [HttpGet("dates")]
+        [Authorize]
+        public async Task<IActionResult> ListWithDates([FromQuery] string initialDate, string finalDate) => await _maintenanceService.ListWithDates(initialDate, finalDate);
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Add([FromBody] AddMaintenanceRequest request)
-        {
-            return await _maintenanceService.Add(request.ToMaintenance());
-        }
+        [Authorize]
+        public async Task<IActionResult> Add([FromBody] AddMaintenanceRequest request) => await _maintenanceService.Add(request.ToMaintenance());
 
-        [HttpPut]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Put(long id, [FromBody] EditMaintenanceRequest request)
-        {
-            return await _maintenanceService.Edit(request.ToMaintenance(id));
-        }
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> Put(long id, [FromBody] EditMaintenanceRequest request) => await _maintenanceService.Edit(request.ToMaintenance(id));
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(long id)
-        {
-            return await _maintenanceService.Delete(id);
-        }
+        [Authorize]
+        public async Task<IActionResult> Delete(long id) => await _maintenanceService.Delete(id);
     }
 }

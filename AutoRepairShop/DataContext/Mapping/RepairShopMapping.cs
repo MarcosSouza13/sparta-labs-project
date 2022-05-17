@@ -23,10 +23,7 @@ namespace AutoRepairShop.Api.DataContext.Mapping
                 .HasMaxLength(128)
                 .IsUnicode(false);
 
-            builder.Property(e => e.CreatedAt)
-                .HasColumnType("datetime");
-
-            builder.Property(e => e.UpdatedAt)
+            builder.Property(a => a.CreatedAt)
                 .HasColumnType("datetime");
         }
     }

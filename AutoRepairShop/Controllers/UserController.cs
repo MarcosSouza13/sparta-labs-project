@@ -1,4 +1,6 @@
 ﻿using AutoRepairShop.Api.Services.Interfaces;
+using AutoRepairShop.Arguments.Login;
+using AutoRepairShop.Arguments.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoRepairShop.Api.Controllers
@@ -14,51 +16,10 @@ namespace AutoRepairShop.Api.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public ActionResult Get(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        public async Task<IActionResult> Add([FromBody] AddUserRequest request) => await _userService.Add(request.ToUser());
 
-        [HttpPut]
-        [ValidateAntiForgeryToken]
-        public ActionResult Put(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        [HttpGet]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request) => await _userService.Login(request.ToLogin());
     }
 }

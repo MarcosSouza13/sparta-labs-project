@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace AutoRepairShop.Api.Repositories.Interfaces.Base
+﻿namespace AutoRepairShop.Api.Repositories.Interfaces.Base
 {
     public interface IRepository<TEntity> where TEntity : class
     {
