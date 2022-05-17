@@ -18,16 +18,10 @@ namespace AutoRepairShop.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> List()
-        {
-            return await _repairShopConfigurationService.List();
-        }
+        public async Task<IActionResult> List() => await _repairShopConfigurationService.List();
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add([FromBody] AddRepairShopConfigurationRequest request)
-        {
-            return await _repairShopConfigurationService.Add(request.ToRepairShopConfiguration());
-        }
+        public async Task<IActionResult> Add([FromBody] AddRepairShopConfigurationRequest request) => await _repairShopConfigurationService.Add(request.ToRepairShopConfiguration());
     }
 }

@@ -16,26 +16,27 @@ namespace AutoRepairShop.Api.Controllers
             _maintenanceService = maintenanceService;
         }
 
-        [HttpGet("all")]
+        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> List()
-        {
-            return await _maintenanceService.List();
-        }
+        public async Task<IActionResult> List() => await _maintenanceService.List();
+
+        [HttpGet("today")]
+        [Authorize]
+        public async Task<IActionResult> ListDaily() => await _maintenanceService.ListDaily();
 
         [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> Get(long id) => await _maintenanceService.Get(id);
 
-        [HttpGet("all/dates")]
+        [HttpGet("dates")]
         [Authorize]
-        public async Task<IActionResult> ListWithDates([FromQuery] string initalDate, string finalDate) => await _maintenanceService.ListWithDates(initalDate, finalDate);
+        public async Task<IActionResult> ListWithDates([FromQuery] string initialDate, string finalDate) => await _maintenanceService.ListWithDates(initialDate, finalDate);
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Add([FromBody] AddMaintenanceRequest request) => await _maintenanceService.Add(request.ToMaintenance());
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> Put(long id, [FromBody] EditMaintenanceRequest request) => await _maintenanceService.Edit(request.ToMaintenance(id));
 

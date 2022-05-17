@@ -8,6 +8,7 @@ namespace AutoRepairShop.Api.Services.Interfaces
     public interface IMaintenanceService : IService<Maintenance>
     {
         Task<ResponseHttp<IEnumerable<IResponse>>> List();
+        Task<ResponseHttp<IEnumerable<IResponse>>> ListDaily();
         Task<ResponseHttp<IEnumerable<IResponse>>> ListWithDates(string initialDate, string finalDate);
     }
 }

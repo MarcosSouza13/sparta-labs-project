@@ -18,9 +18,6 @@ namespace AutoRepairShop.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Add([FromBody] AddRepairShopRequest request)
-        {
-            return await _repairShopService.Add(request.ToRepairShop());
-        }
+        public async Task<IActionResult> Add([FromBody] AddRepairShopRequest request) => await _repairShopService.Add(request.ToRepairShop());
     }
 }

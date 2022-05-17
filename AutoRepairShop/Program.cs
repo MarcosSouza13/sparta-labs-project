@@ -37,7 +37,7 @@ builder.Services
         };
     });
 
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetSection("Sql")["ConnectionString"]));
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(builder.Configuration.GetSection("Sql")["ConnectionString"]).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
 builder.Services.AddOptions();
 

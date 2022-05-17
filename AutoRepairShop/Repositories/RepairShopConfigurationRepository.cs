@@ -37,7 +37,7 @@ namespace AutoRepairShop.Api.Repositories
         public async Task<RepairShopConfiguration> GetByIdRepairShop(long idRepairShop, DateTime dateOfWork)
         {
             var query = await _dataContext.RepairShopConfiguration
-                .FirstOrDefaultAsync(a => a.IdRepairShop == idRepairShop && a.Date == dateOfWork);
+                .FirstOrDefaultAsync(a => a.IdRepairShop == idRepairShop && a.Date.Date == dateOfWork.Date);
 
             return query;
         }
@@ -48,7 +48,8 @@ namespace AutoRepairShop.Api.Repositories
             var finalDate = currentDateTime.AddDays(5);
 
             var query = await _dataContext.RepairShopConfiguration
-                .Where(a => a.Date >= currentDateTime && a.Date <= finalDate).ToListAsync();
+                .Where(a => a.Date >= currentDateTime || a.Date <= finalDate)
+                .ToListAsync();
 
             return query;
         }

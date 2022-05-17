@@ -2,6 +2,8 @@
 using AutoRepairShop.Api.Repositories.Interfaces;
 using AutoRepairShop.Api.Services.Base;
 using AutoRepairShop.Api.Services.Interfaces;
+using AutoRepairShop.Api.Validators.Base;
+using AutoRepairShop.Api.Validators.User;
 using AutoRepairShop.Arguments.Base;
 using AutoRepairShop.Arguments.Login;
 using AutoRepairShop.Arguments.User;
@@ -22,6 +24,11 @@ namespace AutoRepairShop.Api.Services
 
         public async Task<ResponseHttp<IResponse>> Add(User user)
         {
+            var validator = new AddUserValidator();
+            var validation = validator.Validate(user);
+            if (!validation.IsValid)
+                return new ResponseHttp<IResponse>(400, errorsModel: VisualizationError.ToList(validation.Errors));
+
             var repairShop = await _repairShopRepository.Get(user.IdRepairShop);
             if (repairShop == null)
                 return new ResponseHttp<IResponse>(412, errorMessage: $"Não é encontrar a oficina com o Id: {user.IdRepairShop}");

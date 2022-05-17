@@ -21,7 +21,7 @@ namespace AutoRepairShop.Arguments.RepairShop
                 Id = Id,
                 Name = Name,
                 Cnpj = Cnpj,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.Today,
             };
         }
 

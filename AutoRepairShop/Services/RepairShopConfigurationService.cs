@@ -1,6 +1,8 @@
 ﻿using AutoRepairShop.Api.Repositories.Interfaces;
 using AutoRepairShop.Api.Services.Base;
 using AutoRepairShop.Api.Services.Interfaces;
+using AutoRepairShop.Api.Validators.Base;
+using AutoRepairShop.Api.Validators.RepairShopConfiguration;
 using AutoRepairShop.Arguments.Base;
 using AutoRepairShop.Arguments.RepairShopConfiguration;
 using AutoRepairShop.Domain.Entities.Models;
@@ -18,10 +20,16 @@ namespace AutoRepairShop.Api.Services
 
         public async Task<ResponseHttp<IResponse>> Add(RepairShopConfiguration repairShopConfiguration)
         {
+            var validator = new AddRepairShopConfigurationValidator();
+            var validation = validator.Validate(repairShopConfiguration);
+            if (!validation.IsValid)
+                return new ResponseHttp<IResponse>(400, errorsModel: VisualizationError.ToList(validation.Errors));
+
             if (repairShopConfiguration.Date.DayOfWeek == DayOfWeek.Thursday || repairShopConfiguration.Date.DayOfWeek == DayOfWeek.Friday)
-            {
                 repairShopConfiguration.WorkBalance = Convert.ToInt16(repairShopConfiguration.WorkBalance * 1.3);
-            }
+
+            if (repairShopConfiguration.Date == DateTime.MinValue)
+                repairShopConfiguration.Date = DateTime.Today; 
 
             await _repairShopConfigurationRepository.Add(repairShopConfiguration);
 
@@ -49,9 +57,7 @@ namespace AutoRepairShop.Api.Services
             var result = await _repairShopConfigurationRepository.List();
 
             foreach (var item in result)
-            {
                 list.Add(new ViewRepairShopConfigurationResponse(item));
-            }
 
             return new ResponseHttp<IEnumerable<IResponse>>(200, list);
         }

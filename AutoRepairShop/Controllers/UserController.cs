@@ -20,15 +20,9 @@ namespace AutoRepairShop.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddUserRequest request)
-        {
-            return await _userService.Add(request.ToUser());
-        }
+        public async Task<IActionResult> Add([FromBody] AddUserRequest request) => await _userService.Add(request.ToUser());
 
         [HttpGet]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
-        {
-            return await _userService.Login(request.ToLogin());
-        }
+        public async Task<IActionResult> Login([FromBody] LoginRequest request) => await _userService.Login(request.ToLogin());
     }
 }

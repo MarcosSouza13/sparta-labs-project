@@ -13,14 +13,16 @@ namespace AutoRepairShop.Api.Repositories.Dapper
             _connection = connection;
         }
 
-        public async Task<int> Get(long id)
+        public async Task<int> Get(IEnumerable<int> ids)
         {
             var query = @"SELECT 
-		                    [Service].[UnitOfWork]
+                            SUM([Service].[UnitOfWork])
                         FROM
-		                    [Service]
+	                        [Service]
+                        JOIN 
+                            [Maintenance] ON [Maintenance].[Type] = [Service].[Id]
                         WHERE
-                            [Service].[Id] = @id ";
+                            [Service].[Id] IN @ids";
 
             using (var connection = new SqlConnection("Data Source=PC-MARCOS\\SQLEXPRESS;Initial Catalog=SpartaLabs;Integrated Security=True"))
             {
@@ -28,7 +30,7 @@ namespace AutoRepairShop.Api.Repositories.Dapper
                     query,
                     new
                     {
-                        id = id,
+                        ids = ids,
                     });
             }
         }

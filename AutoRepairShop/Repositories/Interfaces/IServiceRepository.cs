@@ -2,6 +2,6 @@
 {
     public interface IServiceRepository
     {
-        Task<int> Get(long id);
+        Task<int> Get(IEnumerable<int> ids);
     }
 }
