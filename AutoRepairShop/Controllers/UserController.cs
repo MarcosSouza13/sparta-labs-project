@@ -1,9 +1,6 @@
-﻿using AutoRepairShop.Api.Authentication;
-using AutoRepairShop.Api.Services.Interfaces;
+﻿using AutoRepairShop.Api.Services.Interfaces;
 using AutoRepairShop.Arguments.Login;
 using AutoRepairShop.Arguments.User;
-using AutoRepairShop.Domain.Entities.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoRepairShop.Api.Controllers

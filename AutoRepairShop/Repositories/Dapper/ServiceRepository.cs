@@ -6,11 +6,11 @@ namespace AutoRepairShop.Api.Repositories.Dapper
 {
     public class ServiceRepository : IServiceRepository
     {
-        readonly DataContext.DataContext _connection;
+        readonly static string _connection = "Data Source=PC-MARCOS\\SQLEXPRESS;Initial Catalog=SpartaLabs;Integrated Security=True";
 
-        public ServiceRepository(DataContext.DataContext connection)
+        public ServiceRepository()
         {
-            _connection = connection;
+
         }
 
         public async Task<int> Get(IEnumerable<int> ids)
@@ -24,7 +24,7 @@ namespace AutoRepairShop.Api.Repositories.Dapper
                         WHERE
                             [Service].[Id] IN @ids";
 
-            using (var connection = new SqlConnection("Data Source=PC-MARCOS\\SQLEXPRESS;Initial Catalog=SpartaLabs;Integrated Security=True"))
+            using (var connection = new SqlConnection(_connection))
             {
                 return await connection.QueryFirstOrDefaultAsync<int>(
                     query,

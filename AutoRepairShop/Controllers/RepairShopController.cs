@@ -1,6 +1,5 @@
 ﻿using AutoRepairShop.Api.Services.Interfaces;
 using AutoRepairShop.Arguments.RepairShop;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AutoRepairShop.Api.Controllers
@@ -17,7 +16,6 @@ namespace AutoRepairShop.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Add([FromBody] AddRepairShopRequest request) => await _repairShopService.Add(request.ToRepairShop());
     }
 }

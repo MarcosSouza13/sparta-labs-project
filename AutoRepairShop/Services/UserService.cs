@@ -32,9 +32,10 @@ namespace AutoRepairShop.Api.Services
             var repairShop = await _repairShopRepository.Get(user.IdRepairShop);
             if (repairShop == null)
                 return new ResponseHttp<IResponse>(412, errorMessage: $"Não é encontrar a oficina com o Id: {user.IdRepairShop}");
-            
+
             user.Cnpj = repairShop.Cnpj;
-            user.Salt = Auth.EncodeBaseToken(user.Password);
+            user.Salt = Auth.Encode(user.Password);
+            user.Password = Auth.Encode(user.Password);
 
             await _userRepository.Add(user);
 
@@ -59,7 +60,7 @@ namespace AutoRepairShop.Api.Services
         public async Task<ResponseHttp<IResponse>> Login(Login login)
         {
             var user = await GetByCnpj(login.Cnpj);
-            if (user == null || user.Salt != Auth.EncodeBaseToken(login.Password))
+            if (user == null || user.Salt != Auth.Encode(login.Password))
                 return new ResponseHttp<IResponse>(422, errorMessage: "Senha inválida");
 
             var loginResponse = new LoginResponse(login);

@@ -29,7 +29,7 @@ namespace AutoRepairShop.Api.Services
                 repairShopConfiguration.WorkBalance = Convert.ToInt16(repairShopConfiguration.WorkBalance * 1.3);
 
             if (repairShopConfiguration.Date == DateTime.MinValue)
-                repairShopConfiguration.Date = DateTime.Today; 
+                repairShopConfiguration.Date = DateTime.Today;
 
             await _repairShopConfigurationRepository.Add(repairShopConfiguration);
 

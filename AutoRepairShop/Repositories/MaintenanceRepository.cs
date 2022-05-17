@@ -15,14 +15,28 @@ namespace AutoRepairShop.Api.Repositories
 
         public async Task Add(Maintenance maintenance)
         {
-            _dataContext.Maintenance.Add(maintenance);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                _dataContext.Maintenance.Add(maintenance);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task Edit(Maintenance maintenance)
         {
-            _dataContext.Maintenance.Update(maintenance);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                _dataContext.Maintenance.Update(maintenance);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<Maintenance> Get(long id)
@@ -30,8 +44,15 @@ namespace AutoRepairShop.Api.Repositories
 
         public async Task Delete(Maintenance maintenance)
         {
-            _dataContext.Maintenance.Remove(maintenance);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                _dataContext.Maintenance.Remove(maintenance);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<IEnumerable<Maintenance>> List()

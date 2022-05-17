@@ -15,8 +15,15 @@ namespace AutoRepairShop.Api.Repositories
 
         public async Task Add(RepairShop repairShop)
         {
-            _dataContext.RepairShop.Add(repairShop);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                _dataContext.RepairShop.Add(repairShop);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Task Delete(RepairShop obj)

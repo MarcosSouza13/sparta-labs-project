@@ -15,8 +15,15 @@ namespace AutoRepairShop.Api.Repositories
 
         public async Task Add(User user)
         {
-            _dataContext.User.Add(user);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                _dataContext.User.Add(user);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Task Delete(User user)
